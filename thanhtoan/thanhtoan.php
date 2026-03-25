@@ -27,7 +27,7 @@ $isAdminOrStaff = ($role == 1 || $role == 2);
 </head>
 <body>
     <h1 align="center">QUẢN LÝ THANH TOÁN</h1>
-    <h2 align="center"><a href="../trangchu.php">TRANG CHỦ</a></h2>
+
 
     <?php
     $sql_select = "SELECT tt.*, dh.ngaydat, kh.tenkh, nv.tennv 

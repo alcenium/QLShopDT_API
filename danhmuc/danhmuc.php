@@ -7,8 +7,6 @@
     <title>Danh mục</title>
 </head>
 <body>
-    <H1 align = "center">QUẢN LÝ DANH MỤC</H1>
-    <h2 align = "center"><a href="../trangchu.php">Trang chủ</a></h2>
     <?php
         include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
         require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
@@ -25,7 +23,9 @@
             $tendm[$stt] = $row->tendm;
         }
     ?>
-    <table width = 1000 align="center" border="1">
+    <br>
+    <H1 align = "center">QUẢN LÝ DANH MỤC</H1>
+    <table width = 1500 align="center" border="1">
         <tr>
             <th>STT</th>
             <th>Mã danh mục</th>

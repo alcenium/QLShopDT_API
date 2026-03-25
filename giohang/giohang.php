@@ -11,7 +11,6 @@ session_start();
 </head>
 <body>
     <h1 align="center">GIỎ HÀNG CỦA BẠN</h1>
-    <h2 align="center"><a href="../trangchu.php">Trang chủ</a></h2>
     
     <?php
         include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');

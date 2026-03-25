@@ -31,7 +31,6 @@ $isAdmin = ($role == 1);
 </head>
 <body>
     <h1 align="center">QUẢN LÝ NHÂN VIÊN</h1>
-    <h2 align="center"><a href="../trangchu.php">Trang chủ</a></h2>
     
     <?php
     // Hiển thị thông tin role

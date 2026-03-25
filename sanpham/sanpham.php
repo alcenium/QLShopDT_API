@@ -32,8 +32,8 @@ $sanpham_list = ($result && $result['status']) ? $result['data'] : [];
     <title>Sản phẩm</title>
 </head>
 <body>
+    <br>
     <h1 align="center">DANH SÁCH SẢN PHẨM</h1>
-    <h2 align="center"><a href="../trangchu.php">Trang chủ</a></h2>
 
     <table width="1300" align="center" border="1">
         <tr>

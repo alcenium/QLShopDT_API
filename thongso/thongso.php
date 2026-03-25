@@ -30,7 +30,6 @@ $isAdminOrStaff = ($role == 1 || $role == 2);
 </head>
 <body>
     <h1 align="center">THÔNG SỐ SẢN PHẨM</h1>
-    <h2 align="center"><a href="../trangchu.php">TRANG CHỦ</a></h2>
     
     <?php
     // Hiển thị thông tin role

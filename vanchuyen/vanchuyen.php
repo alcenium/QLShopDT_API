@@ -10,8 +10,6 @@ session_start();
     <title>Quản lý vận chuyển</title>
 </head>
 <body>
-    <h1 align="center">QUẢN LÝ VẬN CHUYỂN</h1>
-    <h2 align="center"><a href="../trangchu.php">Trang chủ</a></h2>
     
     <?php
         include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
@@ -87,7 +85,8 @@ session_start();
             $trigia[$stt] = $row->trigia;
         }
     ?>
-
+    <br>
+    <h1 align="center">QUẢN LÝ VẬN CHUYỂN</h1>
     <table width="1400" align="center" border="1">
         <tr>
             <th>STT</th>

@@ -10,8 +10,6 @@ session_start();
     <title>Quản lý đơn hàng</title>
 </head>
 <body>
-    <h1 align="center">QUẢN LÝ ĐƠN HÀNG</h1>
-    <h2 align="center"><a href="../trangchu.php">Trang chủ</a></h2>
     
     <?php
         if (!isset($_SESSION['username'])) {
@@ -80,8 +78,8 @@ session_start();
             $sdt[$stt] = $row->sdt;
         }
     ?>
-
-    <table width="1300" align="center" border="1">
+    <h1 align="center">QUẢN LÝ ĐƠN HÀNG</h1>
+    <table width="1500" align="center" border="1">
         <tr>
             <th>STT</th>
             <th>Mã đơn hàng</th>

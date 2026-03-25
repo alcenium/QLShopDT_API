@@ -7,8 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1 align = "center">DANH SÁCH KHÁCH HÀNG<h1>
-    <h2 align = "center"><a href="../trangchu.php">Trang chủ</a></h2>
+
     <?php
         include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
         require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
@@ -27,7 +26,8 @@
             $sdt[$stt] = $row->sdt;
         }
     ?>
-
+    <br>
+    <h1 align = "center">DANH SÁCH KHÁCH HÀNG<h1>
     <table width = 1300 align="center" border="1">
         <tr>
             <th>STT</th>
