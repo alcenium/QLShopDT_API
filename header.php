@@ -18,6 +18,7 @@
 
 // ── Kết nối DB nếu chưa có ─────────────────────────────────────────────
 if (!isset($conn)) {
+     include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
     require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
 }
 
