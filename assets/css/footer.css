@@ -1,0 +1,65 @@
+/* ===== ADMIN FOOTER ===== */
+.admin-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: #1a1f2e;
+    border-top: 2px solid #2e7d32;
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+/* Brand */
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.footer-logo {
+    color: #4caf50;
+    font-size: 16px;
+}
+
+.footer-name {
+    color: #e0e0e0;
+}
+
+/* Center text */
+.footer-center {
+    color: #78909c;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+}
+
+/* Right side - user info */
+.footer-right {
+    color: #78909c;
+    font-size: 12px;
+}
+
+.footer-right strong {
+    color: #4caf50;
+    font-weight: 600;
+}
+
+/* Đẩy nội dung body lên để không bị footer che */
+body {
+    padding-bottom: 60px;
+}

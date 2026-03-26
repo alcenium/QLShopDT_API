@@ -1,14 +1,13 @@
 <?php
 session_start();
-
-$page_title = 'Quản lý Sản phẩm';
-$active_nav = 'sanpham';
-include "../../includes/header.php";
-
 if (!isset($_SESSION['username'])) {
     header("Location: ../login.php");
     exit();
 }
+
+$page_title = 'Quản lý Sản phẩm';
+$active_nav = 'sanpham';
+include "../../includes/header.php";
 
 // Gọi RESTful API lấy danh sách sản phẩm
 $api_url = "http://localhost/QLShopDT_API/api/sanpham";
@@ -50,20 +49,20 @@ $sanpham_list = ($result && $result['status']) ? $result['data'] : [];
             <th>Thông số sản phẩm</th>
         </tr>
 
-        <?php if(empty($sanpham_list)): ?>
+        <?php if (empty($sanpham_list)): ?>
             <tr><td colspan="11" align="center">Không có sản phẩm nào</td></tr>
         <?php else: ?>
-            <?php foreach($sanpham_list as $i => $sp): ?>
+            <?php foreach ($sanpham_list as $i => $sp): ?>
                 <tr align="center">
                     <td><?php echo $i + 1; ?></td>
-                    <td><?php echo $sp['tensp']; ?></td>
-                    <td><?php echo $sp['gia']; ?></td>
-                    <td><?php echo $sp['sl']; ?></td>
-                    <td><?php echo $sp['hang']; ?></td>
-                    <td><?php echo $sp['baohanh']; ?></td>
-                    <td><img src="../img/<?php echo $sp['hinhanh']; ?>" width="50"></td>
-                    <td><?php echo $sp['ghichu']; ?></td>
-                    <td><?php echo $sp['tendm']; ?></td>
+                    <td><?php echo htmlspecialchars($sp['tensp']); ?></td>
+                    <td><?php echo htmlspecialchars($sp['gia']); ?></td>
+                    <td><?php echo htmlspecialchars($sp['sl']); ?></td>
+                    <td><?php echo htmlspecialchars($sp['hang']); ?></td>
+                    <td><?php echo htmlspecialchars($sp['baohanh']); ?></td>
+                    <td><img src="../img/<?php echo htmlspecialchars($sp['hinhanh']); ?>" width="50"></td>
+                    <td><?php echo htmlspecialchars($sp['ghichu']); ?></td>
+                    <td><?php echo htmlspecialchars($sp['tendm']); ?></td>
                     <td>
                         <a href="sanpham_edit.php?masp=<?php echo $sp['masp']; ?>">Sửa</a> |
                         <a href="sanpham_del.php?masp=<?php echo $sp['masp']; ?>"

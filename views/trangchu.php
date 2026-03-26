@@ -6,6 +6,7 @@ $active_nav = 'trangchu';
 $extra_css  = '<link rel="stylesheet" href="/QLShopDT_API/assets/css/trangchu.css">';
 
 require_once "../includes/header.php";
+require_once "../includes/footer.php";
 // $conn đã có từ header.php
 
 // ── Xử lý tìm kiếm ──────────────────────────────────────────
@@ -84,7 +85,7 @@ $result = mysqli_query($conn, $sql);
                     <div class="ps-product-price"><?php echo $gia; ?>đ</div>
                 </div>
                 <div class="ps-product-action">
-                    <a href="/chitietsanpham.php?masp=<?php echo $masp; ?>"
+                    <a href="./sanpham/chitietsanpham.php?masp=<?php echo $masp; ?>"
                        class="ps-btn ps-btn-primary"
                        style="width:100%;justify-content:center">
                         <i class="fa fa-eye"></i> Xem chi tiết
