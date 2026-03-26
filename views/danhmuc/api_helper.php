@@ -1,10 +1,4 @@
 <?php
-/**
- * Helper function để gọi API danh mục
- * Tránh lặp code trong mỗi file
- */
-
-// URL API cố định
 define('DANHMUC_API_URL', 'http://localhost/QLShopDT_API/api/danhmuc_api.php');
 
 /**
