@@ -3,17 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Xóa khách hàng</title>
 </head>
 <body>
     <?php
-    include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
-	$makh = $_REQUEST["makh"];
-    //Tạo câu truy vấn
-    $sql_del_tk="DELETE FROM taikhoan WHERE matk = $makh";
-    mysqli_query($conn,$sql_del_tk);
-	header("Location: khachhang.php");
-	?>
+    include "../../includes/api_helper.php";
+
+    $makh = $_GET['makh'] ?? 0;
+
+    // Gọi API để xóa khách hàng
+    $result = callKhachhangAPI([
+        "action" => "delete",
+        "makh"   => $makh
+    ]);
+
+    if ($result && $result['status']) {
+        header("Location: khachhang.php");
+        exit();
+    } else {
+        echo "<h3>Xóa thất bại</h3>";
+        echo "<p>" . ($result['message'] ?? 'Lỗi không xác định') . "</p>";
+        echo "<p><a href='khachhang.php'>Quay lại</a></p>";
+    }
+    ?>
 </body>
 </html>
