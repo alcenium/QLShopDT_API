@@ -4,6 +4,7 @@ define('SANPHAM_API_URL',  'http://localhost/QLShopDT_API/api/sanpham_api.php');
 define('KHACHHANG_API_URL','http://localhost/QLShopDT_API/api/khachhang_api.php');
 define('THONGSO_API_URL',  'http://localhost/QLShopDT_API/api/thongso_api.php');
 define('SEARCH_API_URL',   'http://localhost/QLShopDT_API/api/search_api.php');
+define('NHANVIEN_API_URL', 'http://localhost/QLShopDT_API/api/nhanvien_api.php');
 
 /**
  * Hàm gọi API chung qua POST (JSON body)
@@ -47,5 +48,10 @@ function callThongsoAPI($data) {
 /**Gọi API tìm kiếm */
 function callSearchAPI($data) {
     return callAPI(SEARCH_API_URL, $data);
+}
+
+/** Gọi API nhân viên */
+function callNhanvienAPI($data) {
+    return callAPI(NHANVIEN_API_URL, $data);
 }
 ?>
