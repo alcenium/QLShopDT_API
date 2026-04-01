@@ -81,9 +81,7 @@ if ($search === '' && ($madm_filter === '' || $madm_filter == '0')) {
     </div>
     <div class="ps-hero-visual">
         <div class="ps-phone-mock">
-            <div class="ps-phone-icon">📱
-                <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXJ6c3BwM291dnY4aXQ0ZnM0dWs4Z2Q4cWVvMzR1Y2Y1bXZsMDZieiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hryis7A55UXZNCUTNA/giphy.gif" alt="">
-            </div>
+            <div class="ps-phone-icon">📱</div>
             <div class="ps-hot-tag">HOT DEAL</div>
         </div>
     </div>
