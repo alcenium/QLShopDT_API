@@ -7,30 +7,64 @@ $extra_css  = '<link rel="stylesheet" href="/QLShopDT_API/assets/css/trangchu.cs
 
 require_once "../includes/header.php";
 require_once "../includes/footer.php";
-// $conn đã có từ header.php
+require_once "../includes/api_helper.php";
 
-// ── Xử lý tìm kiếm ──────────────────────────────────────────
-$search        = '';
+// ── Đường dẫn thư mục img ────────────────────────────────────
+// Chuẩn hóa dấu \ thành / để tránh lỗi trên Windows
+$doc_root     = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/');
+$current_dir  = str_replace('\\', '/', dirname(dirname(__FILE__))); // lên 1 cấp: QLShopDT_API/
+$project_root = rtrim(str_replace($doc_root, '', $current_dir), '/');
+define('IMG_BASE_URL', $project_root . '/includes/img/');
+
+// ── Lấy danh sách danh mục qua API ──────────────────────────
+$result_dm  = callDanhmucAPI(['action' => 'getall']);
+$danhmucs   = ($result_dm && $result_dm['status']) ? $result_dm['data'] : [];
+
+// ── Đọc tham số tìm kiếm từ URL ─────────────────────────────
+$search        = isset($_GET['search']) ? trim($_GET['search']) : '';
+$madm_filter   = isset($_GET['madm'])   ? trim($_GET['madm'])   : '0';
 $section_title = 'SẢN PHẨM NỔI BẬT';
 
-if (isset($_GET['search']) && trim($_GET['search']) !== '') {
-    $search        = trim($_GET['search']);
-    $esc           = mysqli_real_escape_string($conn, $search);
-    $section_title = 'KẾT QUẢ TÌM KIẾM: "' . htmlspecialchars($search) . '"';
-    $sql = "SELECT * FROM sanpham
-            WHERE tensp  LIKE '%$esc%'
-               OR hang   LIKE '%$esc%'
-               OR ghichu LIKE '%$esc%'
-            ORDER BY masp DESC";
+// ── Gọi API lấy sản phẩm ────────────────────────────────────
+if ($search !== '' || ($madm_filter !== '' && $madm_filter != '0')) {
+    // Có từ khóa hoặc lọc danh mục → gọi search_api.php
+    $result_sp = callSearchAPI([
+        'action'  => 'search',
+        'keyword' => $search,
+        'madm'    => $madm_filter
+    ]);
+
+    // Tạo tiêu đề section phù hợp
+    if ($search !== '' && $madm_filter != '0') {
+        $section_title = 'KẾT QUẢ: "' . htmlspecialchars($search) . '" trong danh mục đã chọn';
+    } elseif ($search !== '') {
+        $section_title = 'KẾT QUẢ TÌM KIẾM: "' . htmlspecialchars($search) . '"';
+    } else {
+        // Chỉ lọc theo danh mục, lấy tên danh mục để hiển thị
+        $ten_dm = '';
+        foreach ($danhmucs as $dm) {
+            if ($dm['madm'] == $madm_filter) {
+                $ten_dm = $dm['tendm'];
+                break;
+            }
+        }
+        $section_title = 'DANH MỤC: ' . htmlspecialchars($ten_dm);
+    }
 } else {
-    $sql = "SELECT * FROM sanpham ORDER BY masp DESC LIMIT 12";
+    // Không có điều kiện → lấy tất cả (giới hạn 12)
+    $result_sp = callSanphamAPI(['action' => 'getall']);
 }
 
-$result = mysqli_query($conn, $sql);
+$sanpham_list = ($result_sp && $result_sp['status']) ? $result_sp['data'] : [];
+
+// Nếu getall thì chỉ lấy 12 sản phẩm mới nhất cho trang chủ
+if ($search === '' && ($madm_filter === '' || $madm_filter == '0')) {
+    $sanpham_list = array_slice(array_reverse($sanpham_list), 0, 12);
+}
 ?>
 
-<!-- ===== HERO (chỉ hiện khi không tìm kiếm) ===== -->
-<?php if ($search === ''): ?>
+<!-- ===== HERO (chỉ hiện khi không có điều kiện lọc/tìm kiếm) ===== -->
+<?php if ($search === '' && ($madm_filter === '' || $madm_filter == '0')): ?>
 <section class="ps-hero">
     <div class="ps-hero-text">
         <h1>Công nghệ đỉnh cao<br>— <em>Giá tốt nhất</em></h1>
@@ -56,52 +90,93 @@ $result = mysqli_query($conn, $sql);
 </section>
 <?php endif; ?>
 
-<!-- ===== SẢN PHẨM ===== -->
+<!-- ===== THANH TÌM KIẾM + LỌC DANH MỤC ===== -->
 <div class="ps-filter-bar" id="products">
     <h2 class="ps-section-title" style="margin:0"><?php echo $section_title; ?></h2>
+
+    <form method="GET" action="trangchu.php" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px;">
+        <!-- Ô tìm kiếm từ khóa -->
+        <input type="text"
+               name="search"
+               value="<?php echo htmlspecialchars($search); ?>"
+               placeholder="Tìm kiếm sản phẩm..."
+               style="padding:8px 14px; border-radius:6px; border:1px solid #ccc; min-width:220px;">
+
+        <!-- Dropdown lọc danh mục -->
+        <select name="madm" style="padding:8px 14px; border-radius:6px; border:1px solid #ccc;">
+            <option value="0">-- Tất cả danh mục --</option>
+            <?php foreach ($danhmucs as $dm): ?>
+                <option value="<?php echo $dm['madm']; ?>"
+                    <?php echo ($dm['madm'] == $madm_filter) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($dm['tendm']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <button type="submit"
+                style="padding:8px 20px; border-radius:6px; background:#e74c3c; color:#fff; border:none; cursor:pointer; font-weight:bold;">
+            🔍 Tìm
+        </button>
+
+        <?php if ($search !== '' || ($madm_filter !== '' && $madm_filter != '0')): ?>
+            <a href="trangchu.php"
+               style="padding:8px 16px; border-radius:6px; background:#6c757d; color:#fff; text-decoration:none; font-weight:bold;">
+                ✕ Xóa lọc
+            </a>
+        <?php endif; ?>
+    </form>
 </div>
 
+<!-- ===== DANH SÁCH SẢN PHẨM ===== -->
 <div class="ps-products">
     <div class="ps-product-grid">
-        <?php if ($result && mysqli_num_rows($result) > 0):
-            while ($row = mysqli_fetch_assoc($result)):
-                $masp    = $row['masp'];
-                $tensp   = htmlspecialchars($row['tensp']);
-                $gia     = number_format($row['gia'], 0, ',', '.');
-                $hinhanh = !empty($row['hinhanh']) ? '/img/' . $row['hinhanh'] : '';
-        ?>
-            <div class="ps-product-card">
-                <span class="ps-badge">Hot</span>
-                <div class="ps-product-img">
-                    <?php if ($hinhanh): ?>
-                        <img src="<?php echo htmlspecialchars($hinhanh); ?>"
-                             alt="<?php echo $tensp; ?>"
-                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                        <div class="ps-img-placeholder" style="display:none">📦</div>
-                    <?php else: ?>
-                        <div class="ps-img-placeholder">📦</div>
-                    <?php endif; ?>
+        <?php if (!empty($sanpham_list)): ?>
+            <?php foreach ($sanpham_list as $sp):
+                $masp    = $sp['masp'];
+                $tensp   = htmlspecialchars($sp['tensp']);
+                $gia     = number_format($sp['gia'], 0, ',', '.');
+                // ✅ Đường dẫn ảnh tự động theo vị trí project
+                $hinhanh = !empty($sp['hinhanh'])
+                           ? IMG_BASE_URL . htmlspecialchars($sp['hinhanh'])
+                           : '';
+            ?>
+                <div class="ps-product-card">
+                    <span class="ps-badge">Hot</span>
+                    <div class="ps-product-img">
+                        <?php if ($hinhanh): ?>
+                            <img src="<?php echo $hinhanh; ?>"
+                                 alt="<?php echo $tensp; ?>"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="ps-img-placeholder" style="display:none">📦</div>
+                        <?php else: ?>
+                            <div class="ps-img-placeholder">📦</div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="ps-product-body">
+                        <div class="ps-product-name"><?php echo $tensp; ?></div>
+                        <?php if (!empty($sp['tendm'])): ?>
+                            <div class="ps-product-cat" style="font-size:12px; color:#888; margin-top:4px;">
+                                📂 <?php echo htmlspecialchars($sp['tendm']); ?>
+                            </div>
+                        <?php endif; ?>
+                        <div class="ps-product-price"><?php echo $gia; ?>đ</div>
+                    </div>
+                    <div class="ps-product-action">
+                        <a href="./sanpham/chitietsanpham.php?masp=<?php echo $masp; ?>"
+                           class="ps-btn ps-btn-primary"
+                           style="width:100%;justify-content:center">
+                            <i class="fa fa-eye"></i> Xem chi tiết
+                        </a>
+                    </div>
                 </div>
-                <div class="ps-product-body">
-                    <div class="ps-product-name"><?php echo $tensp; ?></div>
-                    <div class="ps-product-price"><?php echo $gia; ?>đ</div>
-                </div>
-                <div class="ps-product-action">
-                    <a href="./sanpham/chitietsanpham.php?masp=<?php echo $masp; ?>"
-                       class="ps-btn ps-btn-primary"
-                       style="width:100%;justify-content:center">
-                        <i class="fa fa-eye"></i> Xem chi tiết
-                    </a>
-                </div>
-            </div>
-        <?php endwhile;
-        else: ?>
+            <?php endforeach; ?>
+        <?php else: ?>
             <div class="ps-empty" style="grid-column:1/-1">
                 <div class="ps-empty-icon">🔍</div>
                 <p>Không tìm thấy sản phẩm nào!</p>
+                <a href="trangchu.php" style="color:#e74c3c;">← Quay lại trang chủ</a>
             </div>
-        <?php endif;
-        mysqli_close($conn); ?>
+        <?php endif; ?>
     </div>
 </div>
 

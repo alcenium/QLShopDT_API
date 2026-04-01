@@ -7,7 +7,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ hàng</title>
-    <link rel="stylesheet" href="/QLShopDT_API/assets/css/footer.css">;
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/footer.css">
 </head>
 <body>
     <?php

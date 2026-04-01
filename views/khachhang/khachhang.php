@@ -18,7 +18,7 @@ $customers = ($result && $result['status']) ? $result['data'] : [];
 $tong_bg   = count($customers);
 ?>
 <html>
-    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">;
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">
 </html>
 <h1 align="center">DANH SÁCH KHÁCH HÀNG</h1>
 <table width="1300" align="center" border="1">

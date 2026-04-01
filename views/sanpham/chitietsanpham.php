@@ -49,7 +49,7 @@ $matk = $_SESSION['matk'] ?? 0;
             <!-- Hình ảnh sản phẩm -->
             <td width="400" align="center" valign="top">
                 <?php if (!empty($sp['hinhanh'])): ?>
-                    <img src="./img/<?php echo htmlspecialchars($sp['hinhanh']); ?>"
+                    <img src="/QLShopDT_API/includes/img/<?php echo htmlspecialchars($sp['hinhanh']); ?>">
                          alt="<?php echo htmlspecialchars($sp['tensp']); ?>"
                          width="350">
                 <?php else: ?>

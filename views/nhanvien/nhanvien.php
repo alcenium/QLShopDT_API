@@ -34,7 +34,7 @@ $employees = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $tong_bg = count($employees);
 ?>
 <html>
-    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">;
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">
 </html>
 <h1 align="center">QUẢN LÝ NHÂN VIÊN</h1>
 

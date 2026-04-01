@@ -27,7 +27,7 @@
         if (!empty($_FILES['img_hinhanh']['name'])) {
             $datetime = date("Y-m-d_H-i-s_");
             $hinhanh  = $datetime . basename($_FILES['img_hinhanh']['name']);
-            move_uploaded_file($_FILES['img_hinhanh']['tmp_name'], "../img/" . $hinhanh);
+            move_uploaded_file($_FILES['img_hinhanh']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . "/QLShopDT_API/img/" . $hinhanh);
         }
 
         // Gọi API cập nhật sản phẩm

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../../assets/css/main.css">
     <title>Thống kê doanh thu</title>
     <html>
-    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">;
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">
 </html>
 </head>
 <body>

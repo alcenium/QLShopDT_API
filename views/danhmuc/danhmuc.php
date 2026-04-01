@@ -20,7 +20,7 @@ $tong_bg = count($categories);
 ?>
 
 <html>
-    <link rel="stylesheet" href="/QLShopDT_API/assets/css/danhmuc.css">;
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/danhmuc.css">
 </html>
 <h1>QUẢN LÝ DANH MỤC</h1>
 

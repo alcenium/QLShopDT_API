@@ -26,7 +26,7 @@ $isAdminOrStaff = ($role == 1 || $role == 2);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý thanh toán</title>
     <html>
-    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">;
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">
 </html>
 </head>
 <body>

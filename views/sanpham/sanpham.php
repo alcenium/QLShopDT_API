@@ -20,7 +20,7 @@ $result = callSanphamAPI(['action' => 'getall']);
 $sanpham_list = ($result && $result['status']) ? $result['data'] : [];
 ?>
 <html>
-    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">;
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/sanpham.css">
 </html>
 <h1 align="center">DANH SÁCH SẢN PHẨM</h1>
 
@@ -50,7 +50,7 @@ $sanpham_list = ($result && $result['status']) ? $result['data'] : [];
                     <td><?php echo htmlspecialchars($sp['sl']); ?></td>
                     <td><?php echo htmlspecialchars($sp['hang']); ?></td>
                     <td><?php echo htmlspecialchars($sp['baohanh']); ?></td>
-                    <td><img src="../img/<?php echo htmlspecialchars($sp['hinhanh']); ?>" width="50"></td>
+                    <td><img src="/QLShopDT_API/includes/img/<?php echo htmlspecialchars($sp['hinhanh']); ?>" width="50"></td>
                     <td><?php echo htmlspecialchars($sp['ghichu']); ?></td>
                     <td><?php echo htmlspecialchars($sp['tendm']); ?></td>
                     <td>

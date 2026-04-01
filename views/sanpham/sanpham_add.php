@@ -28,7 +28,7 @@
         $hinhanh = "";
         if (!empty($_FILES['img_hinhanh']['name'])) {
             $hinhanh     = basename($_FILES['img_hinhanh']['name']);
-            $upload_path = "../img/" . $hinhanh;
+            $upload_path = $_SERVER['DOCUMENT_ROOT'] . "/QLShopDT_API/includes/img/" . $hinhanh;
             move_uploaded_file($_FILES['img_hinhanh']['tmp_name'], $upload_path);
         }
 
