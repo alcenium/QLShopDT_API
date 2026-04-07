@@ -205,7 +205,32 @@ INSERT INTO thongso (tents, masp, giatri) VALUES
 ('Bộ nhớ', 14, '256GB'),
 ('Chip', 14, 'MediaTek Dimensity 8200');
 
-INSERT INTO giohang (makh) VALUES (3), (4), (5), (6);
+INSERT INTO giohang (makh) VALUES (3), (4), (5), (6), (7);
+
+INSERT INTO giohang_item (magio, masp, sl) VALUES -- theanh - magio=1
+(1, 2, 1),   -- Iphone 16e
+(1, 10, 2),  -- Samsung Galaxy A54
+(1, 16, 1);  -- Realme 11
+
+INSERT INTO giohang_item (magio, masp, sl) VALUES -- (Nguyễn Văn A) - magio=2
+(2, 5, 1),   -- iPhone 16 Pro
+(2, 8, 1),   -- Samsung Galaxy S24 Ultra
+(2, 13, 2);  -- OPPO Find N3 Flip
+
+INSERT INTO giohang_item (magio, masp, sl) VALUES -- (Trần Thị B) - magio=3
+(3, 4, 1),   -- IPhone 12
+(3, 14, 1),  -- OPPO Reno 14
+(3, 15, 3);  -- Vivo Y29
+
+INSERT INTO giohang_item (magio, masp, sl) VALUES -- (Phạm Văn C) - magio=4
+(4, 3, 1),   -- IPhone 17
+(4, 9, 1),   -- Samsung Galaxy Z Fold 5
+(4, 11, 2);  -- Xiaomi 14 Civi
+
+INSERT INTO giohang_item (magio, masp, sl) VALUES -- (Lê Thị D) - magio=5
+(5, 1, 2),   -- Samsung S22 Ultra
+(5, 12, 1),  -- Xiaomi 13 Ultra
+(5, 17, 1);  -- Realme 14 Pro Plus
 
 INSERT INTO donhang (makh, ngaydat, manv, trigia) VALUES
 (3, '2025-12-24', 2, 39690000),

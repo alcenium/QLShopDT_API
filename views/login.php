@@ -1,12 +1,6 @@
 <?php
 session_start();
 
-// Nếu đã đăng nhập rồi thì chuyển về trang chủ
-if (isset($_SESSION['username'])) {
-    header("Location: trangchu.php");
-    exit();
-}
-
 $page_title = 'Đăng nhập';
 $extra_css = '<link rel="stylesheet" href="/QLShopDT_API/assets/css/login.css">';
 
