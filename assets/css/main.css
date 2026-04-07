@@ -148,10 +148,12 @@ button, input, select, textarea { font-family: inherit; }
     cursor: pointer;
     user-select: none;
 }
-.ps-avatar-wrap:hover .ps-dropdown { 
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0);
+        
+.ps-dropdown-toggle {
+    display: none;
+}
+.ps-dropdown-toggle:checked ~ .ps-dropdown {
+    display: block;
 }
 
 .ps-dropdown {
