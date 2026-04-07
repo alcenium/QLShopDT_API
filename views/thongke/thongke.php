@@ -11,6 +11,14 @@
 </head>
 <body>
     <?php
+    $dayChecked = false;
+    $monthChecked = false;
+    $yearChecked = false;
+    $day = '';
+    $month = '';
+    $year = '';
+    $phuongThucThanhToan = 'Tất cả';
+    $trangThaiThanhToan = 'Tất cả';
     $extra_css = '<link rel="stylesheet" href="/QLShopDT_API/assets/css/footer.css">';
     include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
     require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/api/db.php');
