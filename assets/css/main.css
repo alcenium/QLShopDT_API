@@ -220,7 +220,7 @@ button, input, select, textarea { font-family: inherit; }
 /* Cart FAB */
 .ps-cart-fab {
     position: fixed;
-    bottom: 28px;
+    bottom: 60px;
     right: 28px;
     width: 54px;
     height: 54px;
