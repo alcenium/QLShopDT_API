@@ -5,8 +5,7 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-include "../../includes/header.php";
-include "../../includes/api_helper.php";
+require "../../includes/api_helper.php";
 
 $masp = isset($_REQUEST['masp']) ? $_REQUEST['masp'] : 0;
 
@@ -42,6 +41,10 @@ $matk = $_SESSION['matk'] ?? 0;
     <link rel="stylesheet" href="../../assets/css/chitietsanpham.css">
 </head>
 <body>
+    <?php 
+    include "../../includes/header.php";
+    ?>
+    <br>
     <div class="product-detail-container">
         <!-- Header -->
         <div class="product-detail-header">
@@ -98,7 +101,7 @@ $matk = $_SESSION['matk'] ?? 0;
                 <br>
 
                 <!-- Form thêm vào giỏ hàng -->
-                <form method="post" action="../giohang/giohang_insert.php?txt_masp=<?php echo $masp; ?>">
+                <form method="post" action="/QLShopDT_API/controller/giohang/giohang_insert.php">
                     <input type="hidden" name="masp" value="<?php echo $masp; ?>">
                     <table border="0">
                         <tr>
@@ -116,8 +119,8 @@ $matk = $_SESSION['matk'] ?? 0;
                         </tr>
                     </table>
                 </form>
-            </td>
-        </tr>
+            </div>
+        </div>
 
         <!-- Thông số kỹ thuật -->
         <tr>
@@ -143,6 +146,7 @@ $matk = $_SESSION['matk'] ?? 0;
                 </table>
             </td>
         </tr>
-    </table>
+    </div>
+    <?php include __DIR__ . "/../../includes/footer.php"; ?>
 </body>
 </html>

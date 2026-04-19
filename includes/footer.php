@@ -1,9 +1,8 @@
 <?php
-// includes/footer.php
 $current_year = date('Y');
 ?>
 <footer class="admin-footer">
-    <link rel="stylesheet" href="../assets/css/footer.css">
+    <link rel="stylesheet" href="/QLShopDT_API/assets/css/footer.css">
     <div class="footer-inner">
         <div class="footer-brand">
             <span class="footer-logo">&#9644;</span>
