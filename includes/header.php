@@ -267,7 +267,7 @@ $base_url = '/QLShopDT_API';
 
 <!-- Nút giỏ hàng nổi -->
 <?php if (hasPermission('view_own_cart') || hasPermission('manage_product')): ?>
-    <a href="/QLShopDT_API/views/giohang/giohang.php" class="ps-cart-fab">
+    <a href="/QLShopDT_API/views/giohang.php" class="ps-cart-fab">
         <i class="fa fa-shopping-cart"></i>
     </a>
 <?php endif; ?>
