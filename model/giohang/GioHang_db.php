@@ -2,6 +2,32 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/model/DB.php');
 
 class GioHang_db {
+    public static function fetchGioHang() {
+        $db = new DB();
+        $conn = $db->getConnection();
+        $sql = "SELECT gi.maitem, gi.magio, gi.masp, gi.sl,
+                sp.tensp, sp.gia, sp.hinhanh, sp.hang, sp.gia*gi.sl AS thanhtien
+                FROM giohang_item gi
+                JOIN sanpham sp ON gi.masp = sp.masp";
+        $result = $conn->query($sql);
+
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+
+    public static function fetchGioHangTheoMaKH($makh) {
+        $db = new DB();
+        $conn = $db->getConnection();
+        $sql = "SELECT ghi.maitem, ghi.magio, ghi.masp, ghi.sl, 
+                sp.tensp, sp.gia, sp.hinhanh, sp.hang, sp.gia*ghi.sl AS thanhtien
+                FROM giohang gh
+                JOIN giohang_item ghi ON gh.magio = ghi.magio
+                JOIN sanpham sp ON ghi.masp = sp.masp
+                WHERE gh.makh = $makh";
+        $result = $conn->query($sql);
+
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
     /**
      * @param String $username - Tên tài khoản
      * @return false|int - Trả về mã khách hàng nếu tìm thấy, nếu không trả về false
@@ -31,7 +57,7 @@ class GioHang_db {
      * @param int $makh - Mã của khách hàng cần tìm
      * @return int|false - Trả về mã giỏ nếu giỏ hàng tồn tại, ngược lại trả về false
      */
-    public static function giohangTonTai($makh) {
+    public static function nguoiDungCoGioHang($makh) {
         $db = new DB();
         $conn = $db->getConnection();
 
@@ -57,7 +83,7 @@ class GioHang_db {
         $db = new DB();
         $conn = $db->getConnection();
 
-        $sql = "SELECT * FROM giohang_item WHERE magio = '$magio' AND masp = '$masp'";
+        $sql = "SELECT sp.sl as sl_sp, ghi.sl as sl_gio FROM giohang_item ghi, sanpham sp WHERE ghi.masp = sp.masp AND ghi.magio = '$magio' AND ghi.masp = '$masp'";
         $result = $conn->query($sql);
 
         if (!$result)

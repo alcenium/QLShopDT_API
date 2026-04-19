@@ -33,7 +33,7 @@
 
     
     // Kiểm tra người dùng có giỏ hàng không
-    $magio = GioHang_db::giohangTonTai($makh);
+    $magio = GioHang_db::nguoiDungCoGioHang($makh);
     if (!$magio)
     {
         $magio = GioHang_db::taoGioHang($makh);
@@ -43,7 +43,7 @@
     // Kiểm tra sự tồn tại của sản phẩm trong giỏ hàng :v
     $sanPham = GioHang_db::sanphamTonTai($magio, $masp);
 
-    if (!$listSanPham) {
+    if ($SanPham) {
         $sl_sp = $sanPham[0]['sl'];
         $sl_moi = $sl_sp + $sl_them;
 
