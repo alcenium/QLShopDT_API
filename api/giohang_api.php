@@ -1,6 +1,7 @@
 <?php
     header("Content-Type: application/json; charset: utf-8");
-    include "db.php";
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/model/DB.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/model/giohang/GioHang_db.php');
 
     $post_data = json_decode(file_get_contents("php://input"), true);
 
@@ -8,7 +9,9 @@
 
     switch ($action){
         case "getall":
-            $sql = "SELECT gi.maitem, gi.magio, gi.masp, gi.sl, 
+            $db = new DB();
+            $conn = $db->getConnection();
+            $sql = "SELECT gi.maitem, gi.magio, gi.masp, gi.sl,
                     sp.tensp, sp.gia, sp.hinhanh, sp.hang, sp.gia*gi.sl AS thanhtien
                     FROM giohang_item gi
                     JOIN sanpham sp ON gi.masp = sp.masp";
@@ -36,6 +39,8 @@
                 exit();
             }
 
+            $db = new DB();
+            $conn = $db->getConnection();
             $sql = "SELECT ghi.maitem, ghi.magio, ghi.masp, ghi.sl, 
                     sp.tensp, sp.gia, sp.hinhanh, sp.hang, sp.gia*ghi.sl AS thanhtien
                     FROM giohang gh
@@ -52,6 +57,48 @@
             } else {
                 echo json_encode(["status" => false, "message" => "Query thất bại"]);
             }
+        break;
+
+
+        case "add":
+            if (!isset($post_data["magio"]) || !isset($post_data["masp"]) || !isset($post_data["sl"])){
+                echo json_encode(["status" => false, "message" => "Chưa điền đầy đủ thông tin: magio, masp, sl"]);
+                exit();
+            }
+
+            $magio = $post_data["magio"];
+            $masp = $post_data["masp"];
+            $sl = $post_data["sl"];
+
+            $db = new DB();
+            $conn = $db->getConnection();
+
+            // Kiểm tra người dùng có giỏ hàng không
+            $magio = GioHang_db::giohangTonTai($makh);
+            if (!$magio)
+                $magio = GioHang_db::taoGioHang($makh);
+
+
+            // Kiểm tra sự tồn tại của sản phẩm trong giỏ hàng :v
+            $sanPham = GioHang_db::sanphamTonTai($magio, $masp);
+
+            if (!$sanPham) {
+                $sl_sp = $sanPham[0]['sl'];
+                $sl_moi = $sl_sp + $sl_them;
+
+                if ($soluong_moi > $sl_sp) {
+                    echo json_encode(["status" => false, "message" => "Lỗi! số lượng vượt quá số còn trong kho ($sl_sp)"]);
+                    exit();
+                }
+                
+                $result = GioHang_db::suaSoLuong($magio, $masp, $soluong_moi);
+            } else
+                $result = GioHang_db::themSanPham($magio, $masp, $sl_them);
+
+            if ($result)
+                echo json_encode(["status" => true, "message" => "Thêm sản phẩm thành công"]);
+            else
+                echo json_encode(["status" => true, "message" => "Thêm sản phẩm thành công"]);
         break;
 
 
