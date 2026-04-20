@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2026 at 04:38 PM
+-- Generation Time: Apr 20, 2026 at 11:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,10 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `qlshopdienthoai`
 --
-DROP DATABASE IF EXISTS qlshopdienthoai;
-CREATE DATABASE qlshopdienthoai;
 
-USE qlshopdienthoai;
 -- --------------------------------------------------------
 
 --
@@ -65,7 +62,26 @@ INSERT INTO `chitietdonhang` (`madh`, `masp`, `sl`) VALUES
 (13, 10, 1),
 (14, 13, 1),
 (14, 14, 2),
-(14, 15, 1);
+(14, 15, 1),
+(23, 1, 1),
+(23, 2, 1),
+(23, 10, 2),
+(23, 12, 2),
+(23, 16, 1),
+(23, 19, 1),
+(23, 21, 4),
+(24, 18, 1),
+(24, 19, 1),
+(24, 21, 2),
+(25, 12, 1),
+(25, 13, 1),
+(25, 14, 1),
+(29, 14, 1),
+(29, 15, 1),
+(29, 16, 1),
+(29, 17, 1),
+(30, 2, 1),
+(30, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -97,7 +113,7 @@ CREATE TABLE `donhang` (
   `madh` int(11) NOT NULL,
   `makh` int(11) NOT NULL,
   `ngaydat` datetime NOT NULL,
-  `manv` int(11) NOT NULL,
+  `manv` int(11) DEFAULT NULL,
   `trigia` double NOT NULL,
   `trangthai` varchar(50) NOT NULL DEFAULT 'Chờ xác nhận'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
@@ -107,20 +123,28 @@ CREATE TABLE `donhang` (
 --
 
 INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `manv`, `trigia`, `trangthai`) VALUES
-(1, 3, '2025-12-24 00:00:00', 2, 39690000, 'Chờ xác nhận'),
-(2, 3, '2025-12-24 00:00:00', 2, 15000000, 'Chờ xác nhận'),
+(1, 3, '2025-12-24 00:00:00', 2, 39690000, 'Đã hủy'),
+(2, 3, '2025-12-24 00:00:00', 2, 15000000, 'Đã giao'),
 (3, 3, '2025-12-24 00:00:00', 2, 206490000, 'Chờ xác nhận'),
 (4, 4, '2025-01-10 00:00:00', 8, 49980000, 'Chờ xác nhận'),
 (5, 5, '2025-01-12 00:00:00', 8, 27990000, 'Chờ xác nhận'),
 (6, 6, '2026-01-14 00:00:00', 9, 39980000, 'Chờ xác nhận'),
-(7, 7, '2026-01-15 00:00:00', 9, 17990000, 'Chờ xác nhận'),
+(7, 7, '2026-01-15 00:00:00', 9, 17990000, 'Đã hủy'),
 (8, 4, '2026-01-16 00:00:00', 8, 35990000, 'Chờ xác nhận'),
 (9, 5, '2026-01-17 00:00:00', 9, 44980000, 'Chờ xác nhận'),
-(10, 6, '2025-06-18 00:00:00', 8, 19990000, 'Chờ xác nhận'),
-(11, 7, '2025-07-19 00:00:00', 9, 52980000, 'Chờ xác nhận'),
+(10, 6, '2025-06-18 00:00:00', 8, 19990000, 'Đã giao'),
+(11, 7, '2025-07-19 00:00:00', 9, 52980000, 'Đang giao'),
 (12, 3, '2025-08-20 00:00:00', 2, 33980000, 'Đã giao'),
 (13, 4, '2025-09-21 00:00:00', 8, 9990000, 'Đã xác nhận'),
-(14, 5, '2025-10-22 00:00:00', 9, 50000000, 'Đã giao');
+(14, 5, '2025-10-22 00:00:00', 9, 50000000, 'Đã giao'),
+(16, 3, '2026-04-20 21:51:44', NULL, 500000, 'Chờ xác nhận'),
+(19, 7, '2026-04-21 02:18:02', NULL, 12312, 'Chờ xác nhận'),
+(22, 3, '2026-04-21 03:41:35', NULL, 197440000, 'Chờ xác nhận'),
+(23, 3, '2026-04-21 03:43:06', NULL, 197440000, 'Chờ xác nhận'),
+(24, 3, '2026-04-21 03:48:44', NULL, 75980000, 'Đã hủy'),
+(25, 3, '2026-04-21 03:49:01', NULL, 439700001111, 'Đang giao'),
+(29, 3, '2026-04-21 04:26:37', NULL, 53960000, 'Chờ xác nhận'),
+(30, 3, '2026-04-21 04:27:08', NULL, 26490000, 'Đã hủy');
 
 -- --------------------------------------------------------
 
@@ -142,8 +166,7 @@ INSERT INTO `giohang` (`magio`, `makh`) VALUES
 (2, 4),
 (3, 5),
 (4, 6),
-(5, 7),
-(7, 11);
+(5, 7);
 
 -- --------------------------------------------------------
 
@@ -163,9 +186,6 @@ CREATE TABLE `giohang_item` (
 --
 
 INSERT INTO `giohang_item` (`maitem`, `magio`, `masp`, `sl`) VALUES
-(1, 1, 2, 1),
-(2, 1, 10, 2),
-(3, 1, 16, 1),
 (4, 2, 5, 1),
 (5, 2, 8, 1),
 (6, 2, 13, 2),
@@ -202,7 +222,7 @@ INSERT INTO `khachhang` (`makh`, `tenkh`, `diachi`, `sdt`) VALUES
 (5, 'Trần Thị B', '456 Lê Lợi, Q3, TP.HCM', '0912345678'),
 (6, 'Phạm Văn C', '789 Trần Hưng Đạo, Hà Nội', '0923456789'),
 (7, 'Lê Thị D', '321 Hai Bà Trưng, Đà Nẵng', '0934567890'),
-(11, 'Anbeo', 'HaNoi', '0766432452');
+(15, 'An1', 'qe', '312');
 
 -- --------------------------------------------------------
 
@@ -226,7 +246,7 @@ INSERT INTO `nhanvien` (`manv`, `tennv`, `diachi`, `sdt`, `ns`) VALUES
 (1, 'Admin', '', '', '2026-04-20'),
 (2, 'Hùng', 'a', '0', '2025-12-01'),
 (8, 'Hoàng Văn E', '111 Võ Văn Tần, Q3, TP.HCM', '0945678901', '1995-05-15'),
-(9, 'Vũ Thị F', '222 Điện Biên Phủ, Hà Nội', '0956789012', '1998-08-20');
+(9, 'Vũ Thị Fa', '222 Điện Biên Phủ, Hà Nội', '0956789012', '1998-08-20');
 
 -- --------------------------------------------------------
 
@@ -251,7 +271,7 @@ CREATE TABLE `sanpham` (
 --
 
 INSERT INTO `sanpham` (`masp`, `tensp`, `gia`, `sl`, `hang`, `baohanh`, `ghichu`, `hinhanh`, `madm`) VALUES
-(1, 'Samsung S22 Ultra', 15000000, 495, 'Samsung', 12, 'Samsung S22 Ultra 256Gbg', 'galaxy-s22-ultra-burgundy.jpg.webp', 1),
+(1, 'Samsung S22 Ultraa', 15000000, 495, 'Samsung', 12, 'Samsung S22 Ultra 256Gbg', 'galaxy-s22-ultra-burgundy.jpg.webp', 1),
 (2, 'Iphone 16e', 17500000, 189, 'Apple', 12, 'Iphone 16e 256GB - Trắng', 'iphone-16e-trang.jpg.webp', 1),
 (3, 'IPhone 17', 24690000, 97, 'Apple', 12, 'IPhone 17 Tím', 'iphone-17-tim.jpg.webp', 1),
 (4, 'IPhone 12', 6800000, 99, 'Apple', 12, 'IPhone 12 Pro Max Xanh', 'iphone-12-pro-max-xanh.jpg.webp', 1),
@@ -299,7 +319,8 @@ INSERT INTO `taikhoan` (`matk`, `tentk`, `mk`, `role`) VALUES
 (7, 'lethid', '123456', 0),
 (8, 'nhanvien1', '123456', 2),
 (9, 'nhanvien2', '123456', 2),
-(11, 'An', '$2y$10$RzyOoPyGxFbby/tsMweGNeQcu7jw8VEltddv6nvKxYIe6sfS9/oQm', 0);
+(15, 'An1', '$2y$10$a2ty.IMYtQfESvGcFtHwl.BMlAsH6UENcf8QJpfHJQN4DBEeayeQm', 0),
+(16, 'tes1', '$2y$10$89Qn8sO7tDHfi6G6UQI.OOEESaKj5eAW5Vz1MUXOWNVNVmmBoNA7.', 2);
 
 -- --------------------------------------------------------
 
@@ -328,17 +349,13 @@ INSERT INTO `thanhtoan` (`matt`, `madh`, `phuongthuc`, `ngaythanhtoan`, `sotien`
 (4, 1, 'Chuyển khoản', '2025-12-24 09:20:00', 39690000, 'Đã thanh toán', 'Thanh toán qua MoMo'),
 (5, 2, 'Tiền mặt', '2025-12-24 11:45:00', 15000000, 'Đã thanh toán', 'Thanh toán tại cửa hàng'),
 (6, 3, 'Ví điện tử', '2025-12-24 15:30:00', 206490000, 'Đã thanh toán', 'Thanh toán qua ZaloPay'),
-(7, 7, 'Chuyển khoản', '2026-01-15 13:25:00', 17990000, 'Đã thanh toán', 'Thanh toán qua VietQR'),
-(8, 8, 'Ví điện tử', '2026-01-16 10:30:00', 35990000, 'Đã thanh toán', 'Thanh toán qua MoMo'),
-(9, 9, 'Thẻ', '2026-01-17 14:15:00', 44980000, 'Đã thanh toán', 'Thanh toán bằng thẻ Mastercard'),
 (10, 10, 'Chuyển khoản', '2025-02-18 09:45:00', 19990000, 'Đã thanh toán', 'Thanh toán qua VietQR'),
 (11, 11, 'Tiền mặt', '2025-04-19 16:20:00', 52980000, 'Đã thanh toán', 'Thanh toán khi nhận hàng'),
 (12, 12, 'Ví điện tử', '2025-11-20 11:00:00', 33980000, 'Đã thanh toán', 'Thanh toán qua ZaloPay'),
 (13, 13, 'Chuyển khoản', '2025-07-21 15:30:00', 9990000, 'Chờ xác nhận', 'Đang chờ xác nhận giao dịch'),
 (14, 14, 'Thẻ', '2025-10-22 10:45:00', 48980000, 'Đã thanh toán', 'Thanh toán bằng thẻ Visa'),
 (15, 4, 'Ví điện tử', '2026-01-10 17:00:00', 49980000, 'Chờ xác nhận', 'Đang xử lý thanh toán qua ShopeePay'),
-(16, 5, 'Thẻ', '2026-01-12 12:30:00', 27990000, 'Thất bại', 'Giao dịch bị từ chối - Thẻ hết hạn'),
-(17, 6, 'Tiền mặt', '2026-01-14 18:00:00', 39980000, 'Chờ xác nhận', 'Chờ khách hàng thanh toán khi nhận hàng');
+(16, 5, 'Thẻ', '2026-01-12 12:30:00', 27990000, 'Thất bại', 'Giao dịch bị từ chối - Thẻ hết hạn');
 
 -- --------------------------------------------------------
 
@@ -390,7 +407,9 @@ INSERT INTO `thongso` (`mats`, `tents`, `masp`, `giatri`) VALUES
 (30, 'Chip', 13, 'MediaTek Dimensity 9200'),
 (31, 'RAM', 14, '8GB'),
 (32, 'Bộ nhớ', 14, '256GB'),
-(33, 'Chip', 14, 'MediaTek Dimensity 8200');
+(33, 'Chip', 14, 'MediaTek Dimensity 8200'),
+(34, 'CPU', 1, 'Snap'),
+(35, 'a', 1, 'a');
 
 -- --------------------------------------------------------
 
@@ -410,7 +429,6 @@ CREATE TABLE `vanchuyen` (
 --
 
 INSERT INTO `vanchuyen` (`mavc`, `madh`, `makh`, `ngaygiao`) VALUES
-(1, 2, 3, '2025-12-26'),
 (2, 4, 4, '2025-01-15'),
 (3, 5, 5, '2025-01-17'),
 (4, 6, 6, '2025-01-19');
@@ -510,13 +528,13 @@ ALTER TABLE `vanchuyen`
 -- AUTO_INCREMENT for table `danhmuc`
 --
 ALTER TABLE `danhmuc`
-  MODIFY `madm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `madm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `donhang`
 --
 ALTER TABLE `donhang`
-  MODIFY `madh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `madh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `giohang`
@@ -528,7 +546,7 @@ ALTER TABLE `giohang`
 -- AUTO_INCREMENT for table `giohang_item`
 --
 ALTER TABLE `giohang_item`
-  MODIFY `maitem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `maitem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `sanpham`
@@ -540,7 +558,7 @@ ALTER TABLE `sanpham`
 -- AUTO_INCREMENT for table `taikhoan`
 --
 ALTER TABLE `taikhoan`
-  MODIFY `matk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `matk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `thanhtoan`
@@ -552,13 +570,13 @@ ALTER TABLE `thanhtoan`
 -- AUTO_INCREMENT for table `thongso`
 --
 ALTER TABLE `thongso`
-  MODIFY `mats` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `mats` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `vanchuyen`
 --
 ALTER TABLE `vanchuyen`
-  MODIFY `mavc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `mavc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
