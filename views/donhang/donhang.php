@@ -124,7 +124,7 @@ include "../../includes/header.php";
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
                     <th>Chi tiết</th>
-                    <?php if ($can_manage): ?><th>Thao tác</th><?php endif; ?>
+                    <th>Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -155,8 +155,8 @@ include "../../includes/header.php";
                                     <i class="fas fa-eye"></i> Xem
                                 </a>
                             </td>
-                            <?php if ($can_manage): ?>
-                                <td>
+                            <td>
+                                <?php if ($can_manage): ?>
                                     <a href="donhang_edit.php?madh=<?= e($dh['madh']) ?>" class="dh-btn dh-btn-edit">
                                         <i class="fas fa-pen"></i> Sửa
                                     </a>
@@ -165,13 +165,24 @@ include "../../includes/header.php";
                                        onclick="return confirm('Xác nhận xóa đơn hàng #<?= e($dh['madh']) ?>?')">
                                         <i class="fas fa-trash"></i> Xóa
                                     </a>
-                                </td>
-                            <?php endif; ?>
+                                <?php elseif ($role === 0 && $tt === 'Chờ xác nhận'): ?>
+                                    <form method="POST"
+                                          action="/QLShopDT_API/app.php/donhang/<?= (int)$dh['madh'] ?>/cancel"
+                                          style="display:inline;"
+                                          onsubmit="return confirm('Xác nhận hủy đơn hàng #<?= e($dh['madh']) ?>?')">
+                                        <button type="submit" class="dh-btn dh-btn-del">
+                                            <i class="fas fa-times-circle"></i> Hủy đơn
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <span style="color:#aaa;font-size:12px;">—</span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="<?= $can_manage ? 10 : 9 ?>">
+                        <td colspan="10">
                             <div class="dh-empty">
                                 <i class="fas fa-inbox"></i>
                                 <p>Chưa có đơn hàng nào</p>
@@ -182,7 +193,7 @@ include "../../includes/header.php";
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="<?= $can_manage ? 10 : 9 ?>">
+                    <td colspan="10">
                         Tổng cộng: <strong><?= $tong_dh ?></strong> đơn hàng
                     </td>
                 </tr>

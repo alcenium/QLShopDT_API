@@ -73,10 +73,9 @@ class DonHang extends Model {
     /**
      * Thêm chi tiết đơn hàng
      */
-    public function addOrderDetail($madh, $masp, $soluong, $dongia) {
-        $sql = "INSERT INTO chitietdonhang (madh, masp, soluong, dongia) 
-                VALUES (?, ?, ?, ?)";
-        return $this->db->insert($sql, 'iiid', [$madh, $masp, $soluong, $dongia]);
+    public function addOrderDetail($madh, $masp, $soluong) {
+        $sql = "INSERT INTO chitietdonhang (madh, masp, sl) VALUES (?, ?, ?)";
+        return $this->db->insert($sql, 'iii', [$madh, $masp, $soluong]);
     }
     
     /**
@@ -95,6 +94,15 @@ class DonHang extends Model {
         return $this->db->execute($sql, 'di', [$trigia, $madh]);
     }
     
+    /**
+     * Hủy đơn hàng - chỉ được phép khi trạng thái là "Chờ xác nhận"
+     * Trả về true nếu thành công, false nếu không thể hủy
+     */
+    public function cancelOrder($madh) {
+        $sql = "UPDATE donhang SET trangthai = 'Đã hủy' WHERE madh = ? AND trangthai = 'Chờ xác nhận'";
+        return $this->db->execute($sql, 'i', [$madh]);
+    }
+
     /**
      * Xóa đơn hàng và chi tiết
      */

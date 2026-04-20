@@ -7,74 +7,56 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/config/database.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/includes/api_helper.php');
 
-$username = mysqli_real_escape_string($conn, $_SESSION['username']);
-$message = '';
-$error = '';
-
-// Lấy thông tin tài khoản
-$query_user = "SELECT matk, role FROM taikhoan WHERE tentk = '$username'";
-$result_user = mysqli_query($conn, $query_user);
-if (!$result_user || mysqli_num_rows($result_user) == 0) {
-    header('Location: /QLShopDT_API/views/auth/login.php');
-    exit;
-}
-
-$user = mysqli_fetch_assoc($result_user);
-$user_id = $user['matk'];
-$role = $user['role'];
+$username = $_SESSION['username'];
+$user_id  = $_SESSION['userid'] ?? 0;
+$role     = $_SESSION['role']   ?? 0;
+$message  = '';
+$error    = '';
 
 // Lấy thông tin chi tiết từ API
 $profile_data = [];
-$result = callProfileAPI(['action' => 'get', 'user_id' => $user_id, 'role' => $role]);
+$result = callAPI('GET', '/api/profile');
 
 if ($result && $result['status']) {
     $profile_data = $result['data'];
-} else {
-    // Tạo record mới nếu chưa có
-    $name = ucfirst($username);
-    callProfileAPI(['action' => 'create', 'user_id' => $user_id, 'role' => $role, 'name' => $name]);
-    $profile_data = [
-        'tenkh' => $name,
-        'diachi' => '',
-        'sdt' => '',
-        'ns' => $role != 0 ? date('Y-m-d') : ''
-    ];
 }
 
 // Xử lý cập nhật thông tin
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $address = trim($_POST['address'] ?? '');
-    $birthday = isset($_POST['birthday']) ? trim($_POST['birthday']) : null;
+    $name     = trim($_POST['name']     ?? '');
+    $phone    = trim($_POST['phone']    ?? '');
+    $address  = trim($_POST['address']  ?? '');
+    $birthday = trim($_POST['birthday'] ?? '');
 
     if (empty($name)) {
         $error = 'Tên không được để trống!';
     } else {
-        $update_data = [
-            'action' => 'update',
-            'user_id' => $user_id,
-            'role' => $role,
-            'name' => $name,
-            'phone' => $phone,
-            'address' => $address
-        ];
-
-        if ($birthday && $role != 0) {
-            $update_data['birthday'] = $birthday;
+        if ($role == 0) {
+            $update_data = [
+                'tenkh'  => $name,
+                'sdt'    => $phone,
+                'diachi' => $address,
+            ];
+        } else {
+            $update_data = [
+                'tennv'  => $name,
+                'sdt'    => $phone,
+                'diachi' => $address,
+            ];
+            if ($birthday !== '') {
+                $update_data['ns'] = $birthday;
+            }
         }
 
-        $result = callProfileAPI($update_data);
+        $result = callAPI('PUT', '/api/profile', $update_data);
 
         if ($result && $result['status']) {
             $message = 'Cập nhật thông tin cá nhân thành công!';
-            // Làm mới dữ liệu
-            $profile_result = callProfileAPI(['action' => 'get', 'user_id' => $user_id, 'role' => $role]);
-            if ($profile_result && $profile_result['status']) {
-                $profile_data = $profile_result['data'];
+            $refresh = callAPI('GET', '/api/profile');
+            if ($refresh && $refresh['status']) {
+                $profile_data = $refresh['data'];
             }
         } else {
             $error = $result['message'] ?? 'Cập nhật thất bại. Vui lòng thử lại!';
@@ -125,7 +107,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/QLShopDT_API/includes/header.php');
 
                 <div class="ps-form-group">
                     <label for="name" class="ps-label">Họ tên <span class="ps-required">*</span></label>
-                    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($profile_data['tenkh'] ?? ''); ?>" class="ps-input" required>
+                    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($profile_data['tenkh'] ?? $profile_data['tennv'] ?? ''); ?>" class="ps-input" required>
                 </div>
 
                 <div class="ps-form-group">

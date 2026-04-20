@@ -189,6 +189,16 @@ $is_cancelled = ($tt === 'Đã hủy');
             <a href="donhang_edit.php?madh=<?= e($donhang['madh']) ?>" class="ct-btn ct-btn-primary">
                 <i class="fas fa-pen"></i> Cập nhật đơn
             </a>
+        <?php elseif (getCurrentRole() === 0 && $tt === 'Chờ xác nhận'): ?>
+            <form method="POST"
+                  action="/QLShopDT_API/app.php/donhang/<?= (int)$donhang['madh'] ?>/cancel"
+                  style="display:inline;"
+                  onsubmit="return confirm('Xác nhận hủy đơn hàng #<?= e($donhang['madh']) ?>?\nHành động này không thể hoàn tác.')">
+                <button type="submit" class="ct-btn"
+                        style="background:#e94560;color:#fff;border:none;cursor:pointer;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;">
+                    <i class="fas fa-times-circle"></i> Hủy đơn hàng
+                </button>
+            </form>
         <?php endif; ?>
     </div>
 

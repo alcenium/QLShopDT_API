@@ -107,14 +107,11 @@ $img_base = '/QLShopDT_API/includes/img/';
                     <a href="sanpham_edit.php?masp=<?= $sp['masp'] ?>" class="sp-btn sp-btn-edit-lg">Sửa sản phẩm</a>
                 <?php endif; ?>
                 <?php if (!$can_edit && isset($_SESSION['role']) && $_SESSION['role'] == 0): ?>
-                    <form method="POST" action="/QLShopDT_API/app.php/giohang/add" style="display:inline;">
-                        <input type="hidden" name="masp" value="<?= (int)$sp['masp'] ?>">
-                        <input type="hidden" name="soluong" value="1">
-                        <button type="submit" class="sp-btn sp-btn-edit-lg"
-                                style="background:#e94560;border:none;cursor:pointer;color:#fff;">
-                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
-                        </button>
-                    </form>
+                    <button id="btn-add-cart" class="sp-btn sp-btn-edit-lg"
+                            style="background:#e94560;border:none;cursor:pointer;color:#fff;"
+                            onclick="addToCartDetail(<?= (int)$sp['masp'] ?>, this)">
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
+                    </button>
                 <?php endif; ?>
                 <a href="sanpham.php" class="sp-btn sp-btn-default">Quay lại danh sách</a>
             </div>
@@ -155,3 +152,32 @@ $img_base = '/QLShopDT_API/includes/img/';
 </main>
 
 <?php include "../../includes/footer.php"; ?>
+
+<script>
+function addToCartDetail(masp, btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
+    fetch('/QLShopDT_API/app.php/api/giohang', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({masp: masp, sl: 1})
+    }).then(r => r.json()).then(function(data) {
+        if (data.status) {
+            btn.innerHTML = '<i class="fas fa-check"></i> Đã thêm!';
+            btn.style.background = '#10b981';
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng';
+                btn.style.background = '#e94560';
+            }, 1500);
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng';
+            alert(data.message || 'Thêm vào giỏ thất bại');
+        }
+    }).catch(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng';
+    });
+}
+</script>

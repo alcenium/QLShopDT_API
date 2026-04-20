@@ -26,6 +26,142 @@ class DonHangController extends Controller {
         $this->gioHangModel = new GioHang();
     }
     
+    // ===================== Web Methods =====================
+
+    /**
+     * GET /donhang/create — Trang xác nhận đặt hàng (chỉ khách hàng role=0)
+     */
+    public function create() {
+        $this->requireLogin();
+
+        $role     = (int)($_SESSION['role']     ?? -1);
+        $username = $_SESSION['username']        ?? '';
+        $userid   = (int)($_SESSION['userid']   ?? 0);
+
+        if ($role !== 0) {
+            $this->error403('Chỉ khách hàng mới có thể đặt hàng qua giỏ hàng');
+            return;
+        }
+
+        $makh  = $this->gioHangModel->findCustomerByUsername($username);
+        $items = $makh ? $this->gioHangModel->getByCustomer($makh) : [];
+
+        if (empty($items)) {
+            $this->setFlash('error', 'Giỏ hàng trống, không thể đặt hàng');
+            $this->redirect('/giohang');
+            return;
+        }
+
+        $total    = array_sum(array_column($items, 'thanhtien'));
+        $customer = $this->khachHangModel->findById($makh);
+
+        $this->view('donhang/checkout', [
+            'page_title' => 'Xác nhận đặt hàng',
+            'active_nav' => 'giohang',
+            'items'      => $items,
+            'total'      => $total,
+            'customer'   => $customer,
+            'makh'       => $makh,
+        ]);
+    }
+
+    /**
+     * POST /donhang/create — Xử lý đặt hàng từ giỏ hàng
+     */
+    public function placeOrder() {
+        $this->requireLogin();
+
+        $role     = (int)($_SESSION['role']   ?? -1);
+        $username = $_SESSION['username']      ?? '';
+
+        if ($role !== 0) {
+            $this->error403('Chỉ khách hàng mới có thể đặt hàng qua giỏ hàng');
+            return;
+        }
+
+        $makh  = $this->gioHangModel->findCustomerByUsername($username);
+        $items = $makh ? $this->gioHangModel->getByCustomer($makh) : [];
+
+        if (empty($items)) {
+            $this->setFlash('error', 'Giỏ hàng trống');
+            $this->redirect('/giohang');
+            return;
+        }
+
+        $total = array_sum(array_column($items, 'thanhtien'));
+        $madh  = $this->donHangModel->createOrder($makh, $total);
+
+        if (!$madh) {
+            $this->setFlash('error', 'Tạo đơn hàng thất bại, vui lòng thử lại');
+            $this->redirect('/donhang/create');
+            return;
+        }
+
+        // Thêm chi tiết từng sản phẩm
+        foreach ($items as $item) {
+            $this->donHangModel->addOrderDetail($madh, (int)$item['masp'], (int)$item['sl']);
+        }
+
+        // Xóa giỏ hàng
+        $magio = $this->gioHangModel->getCartId($makh);
+        if ($magio) {
+            $this->gioHangModel->clearCart($magio);
+        }
+
+        $this->setFlash('success', 'Đặt hàng thành công! Mã đơn hàng: #' . $madh);
+        $this->redirect('/giohang');
+    }
+
+    /**
+     * POST /donhang/{madh}/cancel — Khách hàng hủy đơn hàng của mình
+     * Chỉ được hủy khi trạng thái là "Chờ xác nhận"
+     */
+    public function cancel($madh) {
+        $this->requireLogin();
+
+        $role     = (int)($_SESSION['role']   ?? -1);
+        $username = $_SESSION['username']      ?? '';
+
+        if ($role !== 0) {
+            $this->error403('Chỉ khách hàng mới có thể hủy đơn hàng');
+            return;
+        }
+
+        $madh = (int)$madh;
+        $order = $this->donHangModel->getOneWithDetails($madh);
+
+        $donhangUrl = BASE_URL . '/views/donhang/donhang.php';
+
+        if (!$order) {
+            $this->setFlash('error', 'Không tìm thấy đơn hàng #' . $madh);
+            header('Location: ' . $donhangUrl);
+            exit();
+        }
+
+        // Kiểm tra đơn hàng có thuộc về khách hàng này không
+        $makh = $this->gioHangModel->findCustomerByUsername($username);
+        if (!$makh || (int)$order['makh'] !== (int)$makh) {
+            $this->error403('Bạn không có quyền hủy đơn hàng này');
+            return;
+        }
+
+        // Kiểm tra trạng thái
+        if ($order['trangthai'] !== 'Chờ xác nhận') {
+            $this->setFlash('error', 'Chỉ có thể hủy đơn hàng ở trạng thái "Chờ xác nhận"');
+            header('Location: ' . $donhangUrl);
+            exit();
+        }
+
+        $result = $this->donHangModel->cancelOrder($madh);
+        if ($result) {
+            $this->setFlash('success', 'Đã hủy đơn hàng #' . $madh . ' thành công');
+        } else {
+            $this->setFlash('error', 'Hủy đơn hàng thất bại, vui lòng thử lại');
+        }
+        header('Location: ' . $donhangUrl);
+        exit();
+    }
+
     // ===================== RESTful API Methods =====================
 
     /**

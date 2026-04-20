@@ -143,13 +143,18 @@ include BASE_PATH . '/includes/footer.php';
 function addToCart(masp, btn) {
     btn.disabled = true;
     btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-    fetch('/QLShopDT_API/app.php/giohang/add', {
+    fetch('/QLShopDT_API/app.php/api/giohang', {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'masp=' + masp + '&soluong=1'
-    }).then(function() {
-        btn.innerHTML = '<i class="fa fa-check"></i>';
-        btn.style.background = '#10b981';
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({masp: masp, sl: 1})
+    }).then(r => r.json()).then(function(data) {
+        if (data.status) {
+            btn.innerHTML = '<i class="fa fa-check"></i>';
+            btn.style.background = '#10b981';
+        } else {
+            btn.innerHTML = '<i class="fa fa-cart-plus"></i>';
+            alert(data.message || 'Thêm vào giỏ thất bại');
+        }
         setTimeout(function() {
             btn.disabled = false;
             btn.innerHTML = '<i class="fa fa-cart-plus"></i>';

@@ -43,7 +43,139 @@ class VanChuyenController extends Controller {
             'error' => $this->getFlash('error'),
         ]);
     }
-    
+
+    /**
+     * Chi tiết vận chuyển (web view)
+     */
+    public function show($mavc) {
+        $this->requireLogin();
+
+        $shipping = $this->vanChuyenModel->getOneWithDetails((int)$mavc);
+        if (!$shipping) {
+            $this->setFlash('error', 'Không tìm thấy vận chuyển');
+            $this->redirect('/vanchuyen');
+            return;
+        }
+
+        $orderDetails = $this->donHangModel->getOrderDetails((int)$shipping['madh']);
+
+        $this->view('vanchuyen/detail', [
+            'page_title'   => 'Chi tiết Vận chuyển #' . $mavc,
+            'active_nav'   => 'vanchuyen',
+            'shipping'     => $shipping,
+            'orderDetails' => $orderDetails,
+            'role'         => (int)($_SESSION['role'] ?? 0),
+        ]);
+    }
+
+    /**
+     * Form sửa vận chuyển (web view)
+     */
+    public function edit($mavc) {
+        $this->requireRole([1, 2]);
+
+        $shipping = $this->vanChuyenModel->getOneWithDetails((int)$mavc);
+        if (!$shipping) {
+            $this->setFlash('error', 'Không tìm thấy vận chuyển');
+            $this->redirect('/vanchuyen');
+            return;
+        }
+
+        $customers = $this->khachHangModel->getAll();
+
+        $this->view('vanchuyen/edit', [
+            'page_title' => 'Sửa Vận chuyển #' . $mavc,
+            'active_nav' => 'vanchuyen',
+            'shipping'   => $shipping,
+            'customers'  => $customers,
+        ]);
+    }
+
+    /**
+     * Xử lý cập nhật vận chuyển (web form)
+     */
+    public function update() {
+        $this->requireRole([1, 2]);
+        $this->verifyCsrf();
+
+        $mavc     = (int)$this->input('mavc');
+        $madh     = (int)$this->input('madh');
+        $makh     = (int)$this->input('makh');
+        $ngaygiao = trim($this->input('ngaygiao', ''));
+
+        $shipping = $this->vanChuyenModel->getOneWithDetails($mavc);
+        if (!$shipping) {
+            $this->setFlash('error', 'Không tìm thấy vận chuyển');
+            $this->redirect('/vanchuyen');
+            return;
+        }
+
+        $ok = $this->vanChuyenModel->updateShipping($mavc, $madh, $makh, $ngaygiao);
+
+        if ($ok !== false) {
+            $this->setFlash('success', 'Cập nhật vận chuyển thành công');
+        } else {
+            $this->setFlash('error', 'Cập nhật vận chuyển thất bại');
+        }
+
+        $this->redirect('/vanchuyen');
+    }
+
+    /**
+     * Xác nhận đã giao (web)
+     */
+    public function confirm($mavc) {
+        $this->requireRole([1, 2]);
+
+        $shipping = $this->vanChuyenModel->getOneWithDetails((int)$mavc);
+        if (!$shipping) {
+            $this->setFlash('error', 'Không tìm thấy vận chuyển');
+            $this->redirect('/vanchuyen');
+            return;
+        }
+
+        $today = date('Y-m-d');
+        $ok = $this->vanChuyenModel->updateShipping(
+            (int)$mavc,
+            (int)$shipping['madh'],
+            (int)$shipping['makh'],
+            $today
+        );
+
+        if ($ok !== false) {
+            $this->donHangModel->updateStatus((int)$shipping['madh'], 'Đã giao');
+            $this->setFlash('success', 'Xác nhận giao hàng thành công');
+        } else {
+            $this->setFlash('error', 'Xác nhận giao hàng thất bại');
+        }
+
+        $this->redirect('/vanchuyen');
+    }
+
+    /**
+     * Xóa vận chuyển (web)
+     */
+    public function delete($mavc) {
+        $this->requireRole([1, 2]);
+
+        $shipping = $this->vanChuyenModel->getOneWithDetails((int)$mavc);
+        if (!$shipping) {
+            $this->setFlash('error', 'Không tìm thấy vận chuyển');
+            $this->redirect('/vanchuyen');
+            return;
+        }
+
+        $ok = $this->vanChuyenModel->deleteShipping((int)$mavc);
+
+        if ($ok) {
+            $this->setFlash('success', 'Xóa vận chuyển thành công');
+        } else {
+            $this->setFlash('error', 'Xóa vận chuyển thất bại');
+        }
+
+        $this->redirect('/vanchuyen');
+    }
+
     // ===================== RESTful API Methods =====================
 
     /**

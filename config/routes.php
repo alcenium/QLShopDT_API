@@ -9,24 +9,42 @@
  */
 
 // ===================== HOME =====================
-$router->get('/', 'HomeController@index');
+$router->get('/',     'HomeController@index');
 $router->get('/home', 'HomeController@index');
+$router->get('/sanpham', 'HomeController@sanpham');
 
 // ===================== AUTH =====================
 $router->get('/logout',             'AuthController@logout');
 $router->post('/api/auth/login',    'AuthController@apiLogin');    // JSON login
 $router->post('/api/auth/register', 'AuthController@apiRegister'); // JSON register
 
-// ===================== WEB PAGES =====================
-$router->get('/sanpham',            'HomeController@sanpham');
-$router->get('/giohang',            'GioHangController@index');
-$router->get('/thanhtoan',                  'ThanhToanController@index');
-$router->get('/thanhtoan/detail/{matt}',    'ThanhToanController@show');
-$router->get('/thanhtoan/edit/{matt}',      'ThanhToanController@edit');
-$router->post('/thanhtoan/update',          'ThanhToanController@update');
-$router->get('/thanhtoan/delete/{matt}',    'ThanhToanController@delete');
-$router->get('/thongke',            'ThongKeController@index');
-$router->get('/vanchuyen',          'VanChuyenController@index');
+// ===================== GIỎ HÀNG (WEB) =====================
+$router->get('/giohang',              'GioHangController@index');
+$router->post('/giohang/update',      'GioHangController@webUpdate');
+$router->get('/giohang/remove/{masp}','GioHangController@webRemove');
+
+// ===================== ĐƠN HÀNG (WEB) =====================
+$router->get('/donhang/create',            'DonHangController@create');
+$router->post('/donhang/create',           'DonHangController@placeOrder');
+$router->post('/donhang/{madh}/cancel',    'DonHangController@cancel');
+
+// ===================== THANH TOÁN (WEB) =====================
+$router->get('/thanhtoan',               'ThanhToanController@index');
+$router->get('/thanhtoan/detail/{matt}', 'ThanhToanController@show');
+$router->get('/thanhtoan/edit/{matt}',   'ThanhToanController@edit');
+$router->post('/thanhtoan/update',       'ThanhToanController@update');
+$router->get('/thanhtoan/delete/{matt}', 'ThanhToanController@delete');
+
+// ===================== THỐNG KÊ (WEB) =====================
+$router->get('/thongke', 'ThongKeController@index');
+
+// ===================== VẬN CHUYỂN (WEB) =====================
+$router->get('/vanchuyen',                  'VanChuyenController@index');
+$router->get('/vanchuyen/detail/{mavc}',    'VanChuyenController@show');
+$router->get('/vanchuyen/edit/{mavc}',      'VanChuyenController@edit');
+$router->post('/vanchuyen/update',          'VanChuyenController@update');
+$router->get('/vanchuyen/confirm/{mavc}',   'VanChuyenController@confirm');
+$router->get('/vanchuyen/delete/{mavc}',    'VanChuyenController@delete');
 
 // ===================== SẢN PHẨM =====================
 $router->get('/api/sanpham',           'SanPhamController@index');   // ?keyword=, ?madm=, ?latest=N
