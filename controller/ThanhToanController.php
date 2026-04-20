@@ -168,7 +168,66 @@ class ThanhToanController extends Controller {
 
         $this->redirect('/thanhtoan');
     }
-    
+
+    /**
+     * GET /thanhtoan/add — Form thêm thanh toán mới (chỉ admin/nhân viên)
+     */
+    public function create() {
+        $this->requireRole([1, 2]);
+
+        $unpaidOrders   = $this->thanhToanModel->getUnpaidOrders();
+        $paymentMethods = $this->thanhToanModel->getPaymentMethods();
+
+        $this->view('thanhtoan/create', [
+            'page_title'     => 'Thêm Thanh toán',
+            'active_nav'     => 'thanhtoan',
+            'unpaidOrders'   => $unpaidOrders   ?: [],
+            'paymentMethods' => $paymentMethods ?: [],
+        ]);
+    }
+
+    /**
+     * POST /thanhtoan/store — Xử lý thêm thanh toán mới
+     */
+    public function store() {
+        $this->requireRole([1, 2]);
+
+        $madh         = (int)($_POST['madh']          ?? 0);
+        $phuongthuc   = trim($_POST['phuongthuc']     ?? '');
+        $sotien       = (float)($_POST['sotien']      ?? 0);
+        $trangthai    = trim($_POST['trangthai']      ?? 'Chờ xác nhận');
+        $ngaythanhtoan = trim($_POST['ngaythanhtoan'] ?? date('Y-m-d H:i:s'));
+        $ghichu       = trim($_POST['ghichu']         ?? '');
+
+        if ($madh <= 0 || empty($phuongthuc) || $sotien <= 0) {
+            $this->setFlash('error', 'Vui lòng điền đầy đủ thông tin bắt buộc');
+            $this->redirect('/thanhtoan/add');
+            return;
+        }
+
+        $data = [
+            'madh'          => $madh,
+            'phuongthuc'    => $phuongthuc,
+            'sotien'        => $sotien,
+            'trangthai'     => $trangthai,
+            'ngaythanhtoan' => $ngaythanhtoan ?: date('Y-m-d H:i:s'),
+            'ghichu'        => $ghichu,
+        ];
+
+        $result = $this->thanhToanModel->add($data);
+
+        if ($result) {
+            if ($trangthai === 'Đã thanh toán') {
+                $this->donHangModel->updateStatus($madh, 'Đã xác nhận');
+            }
+            $this->setFlash('success', 'Thêm thanh toán thành công');
+        } else {
+            $this->setFlash('error', 'Thêm thanh toán thất bại');
+        }
+
+        $this->redirect('/thanhtoan');
+    }
+
     // ===================== RESTful API Methods =====================
 
     /**

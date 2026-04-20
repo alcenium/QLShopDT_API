@@ -19,7 +19,7 @@ include BASE_PATH . '/includes/header.php';
 <div class="tt-form-wrap">
     <div class="tt-form-card">
         <div class="tt-form-header">Thông tin thanh toán</div>
-        <form method="POST" action="/QLShopDT_API/thanhtoan/store">
+        <form method="POST" action="/QLShopDT_API/app.php/thanhtoan/store">
             <?= csrf_field() ?>
             <div class="tt-form-body">
 
