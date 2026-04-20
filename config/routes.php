@@ -19,9 +19,20 @@ $router->post('/api/auth/register', 'AuthController@apiRegister'); // JSON regis
 
 // ===================== WEB PAGES =====================
 $router->get('/giohang',            'GioHangController@index');
+$router->post('/giohang/update',    'GioHangController@update');    // Cập nhật số lượng
+$router->get('/giohang/remove/{masp}', 'GioHangController@remove');  // Xóa sản phẩm
 $router->get('/thanhtoan',          'ThanhToanController@index');
 $router->get('/thongke',            'ThongKeController@index');
 $router->get('/vanchuyen',          'VanChuyenController@index');
+
+// WEB: ĐƠN HÀNG
+$router->get('/donhang',            'DonHangController@index');     // Danh sách đơn hàng
+$router->get('/donhang/create',     'DonHangController@create');    // Form tạo đơn
+$router->post('/donhang',           'DonHangController@store');     // Xử lý tạo đơn
+$router->get('/donhang/{id}',       'DonHangController@show');      // Chi tiết đơn
+$router->get('/donhang/{id}/edit',  'DonHangController@edit');      // Form sửa đơn
+$router->post('/donhang/{id}',      'DonHangController@update');    // Xử lý sửa đơn
+$router->get('/donhang/{id}/delete','DonHangController@delete');    // Xóa đơn
 
 // ===================== SẢN PHẨM =====================
 $router->get('/api/sanpham',           'SanPhamController@index');   // ?keyword=, ?madm=, ?latest=N
