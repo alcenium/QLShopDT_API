@@ -21,6 +21,8 @@
     
     # Chuyển tất cả các request khác đến app.php
     RewriteRule ^(.*)$ app.php/$1 [L,QSA]
+
+    ErrorDocument 404 /QLShopDT_API/views/errors/404.php
 </IfModule>
 
 # Ngăn truy cập trực tiếp vào các file nhạy cảm
