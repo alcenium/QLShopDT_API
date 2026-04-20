@@ -18,8 +18,13 @@ $router->post('/api/auth/login',    'AuthController@apiLogin');    // JSON login
 $router->post('/api/auth/register', 'AuthController@apiRegister'); // JSON register
 
 // ===================== WEB PAGES =====================
+$router->get('/sanpham',            'HomeController@sanpham');
 $router->get('/giohang',            'GioHangController@index');
-$router->get('/thanhtoan',          'ThanhToanController@index');
+$router->get('/thanhtoan',                  'ThanhToanController@index');
+$router->get('/thanhtoan/detail/{matt}',    'ThanhToanController@show');
+$router->get('/thanhtoan/edit/{matt}',      'ThanhToanController@edit');
+$router->post('/thanhtoan/update',          'ThanhToanController@update');
+$router->get('/thanhtoan/delete/{matt}',    'ThanhToanController@delete');
 $router->get('/thongke',            'ThongKeController@index');
 $router->get('/vanchuyen',          'VanChuyenController@index');
 
